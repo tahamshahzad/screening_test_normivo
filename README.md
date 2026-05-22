@@ -266,16 +266,12 @@ Tests are in `rmm/request_management_module/doctype/compassionate_use_request/te
 
 ## Time Log
 
-| Story | Approx. time |
+| Task | Approx. time |
 |---|---|
-| Story 1 - Field set, DocType, roles, and permissions | 3 h |
-| Story 2 - Workflow setup, verification guard | 3 h |
-| Story 3 - Queue (Frappe core; permission filter) | included in Story 1 |
-| Story 4 - Workload overview | skipped |
-| Tests, type hints, mypy/Pyright config | 2 h |
-| **Total** | **8 h** |
-
-Time includes reading Frappe v16 docs, debugging workflow action names, and sorting out type-checker config for Frappe's untyped internals.
+| Understanding the project brief, reading Frappe v16 docs | 3 h |
+| Developing and testing (DocType, workflow, permissions, tests) | 5 h |
+| Recording walkthrough video and writing README | 2 h |
+| **Total** | **10 h** |
 
 ---
 
