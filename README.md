@@ -23,7 +23,7 @@ bench --site <site> migrate
 
 `bench migrate` imports the bundled fixtures (roles, workflow, workflow states, workflow actions, and seed users) automatically.
 
-After migrate, run the password setup script from inside the app directory to set passwords for all seed users:
+After migrate, run the password setup script from the bench root directory to set passwords for all seed users:
 
 ```bash
 python apps/rmm/set_seed_passwords.py <site>
