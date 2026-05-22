@@ -95,19 +95,32 @@ Team Lead visibility is handled by returning an empty string (no filter) from bo
 
 ```
 New
- └─[Start Review]──────────────► In Review
-                                    │
-                        ┌───────────┴──────────────┐
-                        │                          │
-                   [Needs Verification]       [Approve] / [Reject]
-                        │                    (only if requires_verification = 0)
-                        ▼
-                   Verification
-                        │
-                   [Approve] / [Reject]
+ └─[Start Review]──────────────────────────────────► In Review
+                                                         │
+                        ┌──────────┬──────────────────────┼──────────────┐
+                        │          │                       │              │
+               [Needs Verification] │              [Approve]         [Reject]
+                        │   [Needs Correction]    (requires_verification=0)
+                        │          │
+                        ▼          ▼
+                   Verification  Awaiting Requestor
+                        │          │
+                   [Approve]  [Resubmit Request] ──────────────────► In Review
+                   [Reject]         (by RMM Requestor, loops back)
                         │
                  Approved / Rejected
 ```
+
+| From | Action | To | Role |
+|---|---|---|---|
+| New | Start Review | In Review | RMM Agent |
+| In Review | Needs Verification | Verification | RMM Agent |
+| In Review | Needs Correction | Awaiting Requestor | RMM Agent |
+| In Review | Approve | Approved | RMM Agent |
+| In Review | Reject | Rejected | RMM Agent |
+| Awaiting Requestor | Resubmit Request | In Review | RMM Requestor |
+| Verification | Approve | Approved | RMM Medical Reviewer |
+| Verification | Reject | Rejected | RMM Medical Reviewer |
 
 ### Decision: workflow-level role assignment
 

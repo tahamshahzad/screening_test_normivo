@@ -137,7 +137,7 @@ app_license = "mit"
 fixtures = [
     {"dt": "Role", "filters": [["name", "like", "RMM%"]]},
     {"dt": "Workflow", "filters": [["name", "=", "Compassionate Use Request WF"]]},
-    {"dt": "Workflow State", "filters": [["workflow_state_name", "in", ["New", "In Review", "Verification", "Approved", "Rejected"]]]},
+    {"dt": "Workflow State", "filters": [["workflow_state_name", "in", ["New", "In Review", "Verification", "Awaiting Requestor", "Approved", "Rejected"]]]},
     {"dt": "Workflow Action Master", "filters": [["workflow_action_name", "in", ["Start Review", "Approve", "Reject", "Needs Verification", "Needs Correction", "Resubmit Request"]]]},
     {"dt": "User", "filters": [["first_name", "like", "RMM%"]]},
 ]
