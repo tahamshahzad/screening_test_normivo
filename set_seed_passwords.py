@@ -28,7 +28,7 @@ def set_passwords(site: str) -> None:
     print(f"Setting passwords for seed users on site: {site}\n")
     for user in SEED_USERS:
         result = subprocess.run(
-            ["bench", "--site", site, "set-user-password", user, PASSWORD],
+            ["bench", "--site", site, "set-password", user, PASSWORD],
             capture_output=True,
             text=True,
         )
