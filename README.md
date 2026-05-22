@@ -157,7 +157,7 @@ All transitions including the send-back loop are built as Workflow Action transi
 The Verification state is always in the workflow definition. Whether a request has to go through it is controlled by `requires_verification`, which is auto-set from `is_pregnancy` in `before_save`. In practice:
 
 - If verification is not required, the agent can Approve or Reject directly from In Review. The Verification state exists but is never used.
-- If verification is required, the agent must use "Needs Verification" to escalate. The `validate()` method then blocks any attempt to Approve or Reject unless the last saved state in the database was "Verification".
+- If verification is required, the agent must explicitly trigger the "Needs Verification" action to escalate the request. This does not happen automatically - the agent reviews the request first and may send it back to the doctor for corrections before deciding to escalate. Once the agent is satisfied the request is ready, they manually move it to Verification. The `validate()` method then blocks any attempt to Approve or Reject unless the last saved state in the database was "Verification".
 
 I chose this over approach (b) (auto-skip) because Frappe's Workflow engine does not support conditional state skipping natively. Making it auto-skip would need a custom `before_workflow_action` hook to intercept and re-route transitions - more code than the boolean flag approach. The flag is simpler, explicit, and easy to test.
 
