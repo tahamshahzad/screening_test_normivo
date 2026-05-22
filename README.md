@@ -21,11 +21,17 @@ bench --site <site> install-app rmm
 bench --site <site> migrate
 ```
 
-`bench migrate` imports the bundled fixtures (roles, workflow, workflow states, workflow actions, and seed users) automatically. No extra command needed.
+`bench migrate` imports the bundled fixtures (roles, workflow, workflow states, workflow actions, and seed users) automatically.
 
-> **Note on seed user passwords:** Frappe does not export password hashes in fixtures. Seed accounts will be created on install but passwords need to be set via the "Forgot Password" flow or `bench --site <site> set-user-password <email>`.
+After migrate, run the password setup script from inside the app directory to set passwords for all seed users:
 
-### Seed Users
+```bash
+python apps/rmm/set_seed_passwords.py <site>
+```
+
+This sets all seed user passwords to `Rmm@12345`.
+
+### Seed Users (password: `Rmm@12345`)
 
 | Role | Email |
 |---|---|
