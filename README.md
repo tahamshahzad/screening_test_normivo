@@ -88,14 +88,15 @@ The doctor can read the decision fields once they are filled in, but cannot edit
 |---|---|---|---|
 | **RMM Requestor** | Yes — own requests only | Own requests only | Doctor-facing fields (permlevel 3) |
 | **RMM Team Lead** | No | All requests | All requests; assigns reviewers |
-| **RMM Agent** | No | All requests | All fields including decision (permlevel 4) |
-| **RMM Medical Reviewer** | No | Requests in Verification, Approved, Rejected | Decision fields (permlevel 4) |
+| **RMM Agent** | No | Requests assigned to them | All fields including decision (permlevel 4) |
+| **RMM Medical Reviewer** | No | Requests in Verification, Approved, Rejected (plus any assigned to them) | Decision fields (permlevel 4) |
 
 **How visibility is enforced:**
 
 - **RMM Requestor** — Frappe's built-in `if_owner` flag on the DocType permission row restricts them to records they created. No custom code needed.
-- **RMM Team Lead and RMM Agent** — a custom list-filter hook returns no extra SQL condition for these roles, so they see everything.
-- **RMM Medical Reviewer** — a custom list-filter hook adds a `workflow_state IN ('Verification', 'Approved', 'Rejected')` condition to their queries, so they only see records that have reached those states. A document-level hook enforces the same rule when a record is opened directly. In both cases, if a record is explicitly assigned to a reviewer, they can see it regardless of state.
+- **RMM Team Lead** — the list-filter hook returns no SQL condition for this role, so they see all records.
+- **RMM Agent** — the list-filter hook restricts them to records where their email appears in the assignment list (`_assign`). They only see what has been assigned to them.
+- **RMM Medical Reviewer** — the list-filter hook adds a `workflow_state IN ('Verification', 'Approved', 'Rejected')` condition so they only see records that have reached those states. If a record is explicitly assigned to them, they can also see it regardless of state. A document-level hook enforces the same rules when a record is opened directly.
 
 ---
 
