@@ -104,7 +104,7 @@
   ],
   "search_bar": 1,
   "send_me_a_copy": 0,
-  "send_welcome_email": 1,
+  "send_welcome_email": 0,
   "show_absolute_datetime_in_timeline": 0,
   "simultaneous_sessions": 2,
   "social_logins": [
@@ -229,7 +229,7 @@
   ],
   "search_bar": 1,
   "send_me_a_copy": 0,
-  "send_welcome_email": 1,
+  "send_welcome_email": 0,
   "show_absolute_datetime_in_timeline": 0,
   "simultaneous_sessions": 2,
   "social_logins": [
@@ -320,7 +320,7 @@
   ],
   "search_bar": 1,
   "send_me_a_copy": 0,
-  "send_welcome_email": 1,
+  "send_welcome_email": 0,
   "show_absolute_datetime_in_timeline": 0,
   "simultaneous_sessions": 2,
   "social_logins": [
@@ -411,7 +411,7 @@
   ],
   "search_bar": 1,
   "send_me_a_copy": 0,
-  "send_welcome_email": 1,
+  "send_welcome_email": 0,
   "show_absolute_datetime_in_timeline": 0,
   "simultaneous_sessions": 2,
   "social_logins": [
@@ -536,7 +536,7 @@
   ],
   "search_bar": 1,
   "send_me_a_copy": 0,
-  "send_welcome_email": 1,
+  "send_welcome_email": 0,
   "show_absolute_datetime_in_timeline": 0,
   "simultaneous_sessions": 2,
   "social_logins": [
@@ -627,7 +627,7 @@
   ],
   "search_bar": 1,
   "send_me_a_copy": 0,
-  "send_welcome_email": 1,
+  "send_welcome_email": 0,
   "show_absolute_datetime_in_timeline": 0,
   "simultaneous_sessions": 2,
   "social_logins": [
