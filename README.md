@@ -93,23 +93,7 @@ Team Lead visibility is handled by returning an empty string (no filter) from bo
 
 ### States and transitions
 
-```
-New
- └─[Start Review]──────────────────────────────────► In Review
-                                                         │
-                        ┌──────────┬──────────────────────┼──────────────┐
-                        │          │                       │              │
-               [Needs Verification] │              [Approve]         [Reject]
-                        │   [Needs Correction]    (requires_verification=0)
-                        │          │
-                        ▼          ▼
-                   Verification  Awaiting Requestor
-                        │          │
-                   [Approve]  [Resubmit Request] ──────────────────► In Review
-                   [Reject]         (by RMM Requestor, loops back)
-                        │
-                 Approved / Rejected
-```
+![Compassionate Use Request Workflow](docs/workflow.png)
 
 | From | Action | To | Role |
 |---|---|---|---|
