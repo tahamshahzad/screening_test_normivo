@@ -141,14 +141,14 @@ All transitions — including the send-back loop — are implemented as Workflow
 
 ### Decision: Verification approach
 
-**We chose approach (a) — a boolean flag gates whether Verification is required — implemented as a hybrid with the state always present in the workflow graph.**
+**I chose approach (a) — a boolean flag gates whether Verification is required — implemented as a hybrid with the state always present in the workflow graph.**
 
 The Verification state is always in the workflow definition. Whether a request is required to pass through it is controlled by `requires_verification`, which is auto-set from `is_pregnancy` in `before_save`. This means:
 
 - For requests that do not require verification, the agent can Approve or Reject directly from In Review. The Verification state exists but is never entered.
 - For requests that do require verification, the agent must use "Needs Verification" to escalate. The `validate()` method then blocks any attempt to Approve or Reject unless the previous committed state in the database was "Verification".
 
-We chose this over a pure approach (b) (auto-skip) because Frappe's Workflow engine does not support conditional auto-skipping of states natively. Implementing auto-skip would require a custom `before_workflow_action` hook to intercept transitions and re-route them — more custom code than using the boolean flag. The flag approach is simpler, explicit, and testable.
+I chose this over a pure approach (b) (auto-skip) because Frappe's Workflow engine does not support conditional auto-skipping of states natively. Implementing auto-skip would require a custom `before_workflow_action` hook to intercept transitions and re-route them — more custom code than using the boolean flag. The flag approach is simpler, explicit, and testable.
 
 **Two layers of enforcement so the rule cannot be bypassed:**
 
