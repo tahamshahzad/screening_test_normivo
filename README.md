@@ -25,6 +25,17 @@ bench --site <site> migrate
 
 > **Note on seed user passwords:** Frappe does not export password hashes in fixtures. Seed user accounts will be created on install but will need passwords set via the "Forgot Password" flow or `bench --site <site> set-user-password <email>`.
 
+### Seed Users
+
+| Role | Email |
+|---|---|
+| RMM Team Lead | rmm_team_lead@yopmail.com |
+| RMM Requestor | requestor@yopmail.com |
+| RMM Requestor | requestor_2@yopmail.com |
+| RMM Agent (Reviewer) | review_agent@yopmail.com |
+| RMM Agent (Reviewer) | review_agent_james@yopmail.com |
+| RMM Medical Reviewer | medical_verification_agent@yopmail.com |
+
 ---
 
 ## Story 1 — Creating a Request
