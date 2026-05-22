@@ -1,0 +1,44 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-05-22 02:52:22.614859",
+  "name": "Start Review",
+  "workflow_action_name": "Start Review"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-05-21 02:08:18.864607",
+  "name": "Approve",
+  "workflow_action_name": "Approve"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-05-22 02:33:14.364589",
+  "name": "Needs Verification",
+  "workflow_action_name": "Needs Verification"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-05-22 02:26:54.531743",
+  "name": "Resubmit Request",
+  "workflow_action_name": "Resubmit Request"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-05-22 02:24:48.664387",
+  "name": "Needs Correction",
+  "workflow_action_name": "Needs Correction"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2026-05-21 02:08:18.866014",
+  "name": "Reject",
+  "workflow_action_name": "Reject"
+ }
+]

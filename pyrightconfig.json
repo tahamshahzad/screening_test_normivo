@@ -1,0 +1,11 @@
+{
+  "pythonVersion": "3.14",
+  "typeCheckingMode": "basic",
+  "extraPaths": ["../frappe"],
+  "ignore": ["../frappe/frappe/**"],
+  "reportAttributeAccessIssue": "none",
+  "reportUnknownMemberType": "none",
+  "reportUnknownVariableType": "none",
+  "reportMissingModuleSource": "none",
+  "reportMissingImports": "none"
+}

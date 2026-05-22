@@ -1,0 +1,192 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Workflow",
+  "document_type": "Compassionate Use Request",
+  "enable_action_confirmation": 0,
+  "is_active": 1,
+  "modified": "2026-05-22 23:35:25.199479",
+  "name": "Compassionate Use Request WF",
+  "override_status": 0,
+  "send_email_alert": 0,
+  "states": [
+   {
+    "allow_edit": "RMM Team Lead",
+    "avoid_status_override": 0,
+    "doc_status": null,
+    "evaluate_as_expression": 0,
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "send_email": 1,
+    "state": "New",
+    "update_field": null,
+    "update_value": null,
+    "workflow_builder_id": "1"
+   },
+   {
+    "allow_edit": "RMM Agent",
+    "avoid_status_override": 0,
+    "doc_status": null,
+    "evaluate_as_expression": 0,
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "send_email": 0,
+    "state": "In Review",
+    "update_field": null,
+    "update_value": null,
+    "workflow_builder_id": "2"
+   },
+   {
+    "allow_edit": "RMM Requestor",
+    "avoid_status_override": 0,
+    "doc_status": null,
+    "evaluate_as_expression": 0,
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "send_email": 1,
+    "state": "Awaiting Requestor",
+    "update_field": null,
+    "update_value": null,
+    "workflow_builder_id": "3"
+   },
+   {
+    "allow_edit": "RMM Agent",
+    "avoid_status_override": 0,
+    "doc_status": null,
+    "evaluate_as_expression": 0,
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "send_email": 1,
+    "state": "Approved",
+    "update_field": null,
+    "update_value": null,
+    "workflow_builder_id": "5"
+   },
+   {
+    "allow_edit": "RMM Medical Reviewer",
+    "avoid_status_override": 0,
+    "doc_status": null,
+    "evaluate_as_expression": 0,
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "send_email": 1,
+    "state": "Verification",
+    "update_field": null,
+    "update_value": null,
+    "workflow_builder_id": "7"
+   },
+   {
+    "allow_edit": "RMM Agent",
+    "avoid_status_override": 0,
+    "doc_status": null,
+    "evaluate_as_expression": 0,
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "send_email": 1,
+    "state": "Rejected",
+    "update_field": null,
+    "update_value": null,
+    "workflow_builder_id": "6"
+   }
+  ],
+  "transitions": [
+   {
+    "action": "Start Review",
+    "allow_self_approval": 1,
+    "allowed": "RMM Agent",
+    "condition": null,
+    "next_state": "In Review",
+    "send_email_to_creator": 0,
+    "state": "New",
+    "transition_tasks": null,
+    "workflow_builder_id": "action-1"
+   },
+   {
+    "action": "Needs Correction",
+    "allow_self_approval": 1,
+    "allowed": "RMM Agent",
+    "condition": null,
+    "next_state": "Awaiting Requestor",
+    "send_email_to_creator": 0,
+    "state": "In Review",
+    "transition_tasks": null,
+    "workflow_builder_id": "action-2"
+   },
+   {
+    "action": "Resubmit Request",
+    "allow_self_approval": 1,
+    "allowed": "RMM Requestor",
+    "condition": null,
+    "next_state": "In Review",
+    "send_email_to_creator": 0,
+    "state": "Awaiting Requestor",
+    "transition_tasks": null,
+    "workflow_builder_id": "action-3"
+   },
+   {
+    "action": "Approve",
+    "allow_self_approval": 1,
+    "allowed": "RMM Agent",
+    "condition": "not doc.requires_verification == 1",
+    "next_state": "Approved",
+    "send_email_to_creator": 0,
+    "state": "In Review",
+    "transition_tasks": null,
+    "workflow_builder_id": "action-5"
+   },
+   {
+    "action": "Needs Verification",
+    "allow_self_approval": 1,
+    "allowed": "RMM Agent",
+    "condition": "doc.requires_verification == 1",
+    "next_state": "Verification",
+    "send_email_to_creator": 0,
+    "state": "In Review",
+    "transition_tasks": null,
+    "workflow_builder_id": "action-8"
+   },
+   {
+    "action": "Approve",
+    "allow_self_approval": 1,
+    "allowed": "RMM Medical Reviewer",
+    "condition": null,
+    "next_state": "Approved",
+    "send_email_to_creator": 0,
+    "state": "Verification",
+    "transition_tasks": null,
+    "workflow_builder_id": "action-9"
+   },
+   {
+    "action": "Reject",
+    "allow_self_approval": 1,
+    "allowed": "RMM Agent",
+    "condition": "not doc.requires_verification == 1",
+    "next_state": "Rejected",
+    "send_email_to_creator": 0,
+    "state": "In Review",
+    "transition_tasks": null,
+    "workflow_builder_id": "action-7"
+   },
+   {
+    "action": "Reject",
+    "allow_self_approval": 1,
+    "allowed": "RMM Medical Reviewer",
+    "condition": null,
+    "next_state": "Rejected",
+    "send_email_to_creator": 0,
+    "state": "Verification",
+    "transition_tasks": null,
+    "workflow_builder_id": "action-10"
+   }
+  ],
+  "workflow_data": "[{\"type\":\"state\",\"dimensions\":{\"width\":82,\"height\":53},\"handleBounds\":{\"source\":[{\"id\":\"top\",\"position\":\"top\",\"x\":37.46875,\"y\":-11,\"width\":7,\"height\":7},{\"id\":\"right\",\"position\":\"right\",\"x\":85.953125,\"y\":23,\"width\":7,\"height\":7},{\"id\":\"bottom\",\"position\":\"bottom\",\"x\":37.46875,\"y\":57,\"width\":7,\"height\":7},{\"id\":\"left\",\"position\":\"left\",\"x\":-11,\"y\":23,\"width\":7,\"height\":7}]},\"computedPosition\":{\"x\":757.2591591591593,\"y\":237.40830830830834,\"z\":0},\"id\":\"1\",\"position\":{\"x\":757.2591591591593,\"y\":237.40830830830834}},{\"type\":\"state\",\"dimensions\":{\"width\":116,\"height\":53},\"handleBounds\":{\"source\":[{\"id\":\"top\",\"position\":\"top\",\"x\":54.421875,\"y\":-11,\"width\":7,\"height\":7},{\"id\":\"right\",\"position\":\"right\",\"x\":119.84375,\"y\":23,\"width\":7,\"height\":7},{\"id\":\"bottom\",\"position\":\"bottom\",\"x\":54.421875,\"y\":57,\"width\":7,\"height\":7},{\"id\":\"left\",\"position\":\"left\",\"x\":-11,\"y\":23,\"width\":7,\"height\":7}]},\"computedPosition\":{\"x\":708.5,\"y\":561.5,\"z\":0},\"id\":\"2\",\"position\":{\"x\":708.5,\"y\":561.5}},{\"type\":\"state\",\"dimensions\":{\"width\":162,\"height\":74},\"handleBounds\":{\"source\":[{\"id\":\"top\",\"position\":\"top\",\"x\":77.5,\"y\":-11,\"width\":7,\"height\":7},{\"id\":\"right\",\"position\":\"right\",\"x\":165.99993896484375,\"y\":33.5,\"width\":7,\"height\":7},{\"id\":\"bottom\",\"position\":\"bottom\",\"x\":77.5,\"y\":78,\"width\":7,\"height\":7},{\"id\":\"left\",\"position\":\"left\",\"x\":-11,\"y\":33.5,\"width\":7,\"height\":7}]},\"computedPosition\":{\"x\":373.0403403403403,\"y\":753.9022022022023,\"z\":0},\"id\":\"3\",\"position\":{\"x\":373.0403403403403,\"y\":753.9022022022023}},{\"type\":\"state\",\"dimensions\":{\"width\":117,\"height\":53},\"handleBounds\":{\"source\":[{\"id\":\"top\",\"position\":\"top\",\"x\":54.9375,\"y\":-11,\"width\":7,\"height\":7},{\"id\":\"right\",\"position\":\"right\",\"x\":120.875,\"y\":23,\"width\":7,\"height\":7},{\"id\":\"bottom\",\"position\":\"bottom\",\"x\":54.9375,\"y\":57,\"width\":7,\"height\":7},{\"id\":\"left\",\"position\":\"left\",\"x\":-11,\"y\":23,\"width\":7,\"height\":7}]},\"computedPosition\":{\"x\":1151.5,\"y\":400.5,\"z\":0},\"id\":\"5\",\"position\":{\"x\":1151.5,\"y\":400.5}},{\"type\":\"state\",\"dimensions\":{\"width\":128,\"height\":53},\"handleBounds\":{\"source\":[{\"id\":\"top\",\"position\":\"top\",\"x\":60.625,\"y\":-11,\"width\":7,\"height\":7},{\"id\":\"right\",\"position\":\"right\",\"x\":132.265625,\"y\":23,\"width\":7,\"height\":7},{\"id\":\"bottom\",\"position\":\"bottom\",\"x\":60.625,\"y\":57,\"width\":7,\"height\":7},{\"id\":\"left\",\"position\":\"left\",\"x\":-11,\"y\":23,\"width\":7,\"height\":7}]},\"computedPosition\":{\"x\":1235.951343560815,\"y\":687.3878719605246,\"z\":0},\"id\":\"7\",\"position\":{\"x\":1235.951343560815,\"y\":687.3878719605246}},{\"type\":\"state\",\"dimensions\":{\"width\":111,\"height\":53},\"handleBounds\":{\"source\":[{\"id\":\"top\",\"position\":\"top\",\"x\":51.78125,\"y\":-11,\"width\":7,\"height\":7},{\"id\":\"right\",\"position\":\"right\",\"x\":114.5625,\"y\":23,\"width\":7,\"height\":7},{\"id\":\"bottom\",\"position\":\"bottom\",\"x\":51.78125,\"y\":57,\"width\":7,\"height\":7},{\"id\":\"left\",\"position\":\"left\",\"x\":-11,\"y\":23,\"width\":7,\"height\":7}]},\"computedPosition\":{\"x\":873.5,\"y\":1078.4425425425425,\"z\":0},\"id\":\"6\",\"position\":{\"x\":873.5,\"y\":1078.4425425425425}},{\"type\":\"action\",\"dimensions\":{\"width\":106,\"height\":33},\"handleBounds\":{\"source\":[{\"id\":\"top\",\"position\":\"top\",\"x\":50.171875,\"y\":-2,\"width\":6,\"height\":6},{\"id\":\"right\",\"position\":\"right\",\"x\":102.34375,\"y\":13.5,\"width\":6,\"height\":6},{\"id\":\"bottom\",\"position\":\"bottom\",\"x\":50.171875,\"y\":29,\"width\":6,\"height\":6},{\"id\":\"left\",\"position\":\"left\",\"x\":-2,\"y\":13.5,\"width\":6,\"height\":6}]},\"computedPosition\":{\"x\":714,\"y\":430.5,\"z\":0},\"id\":\"action-1\",\"position\":{\"x\":714,\"y\":430.5},\"data\":{\"from_id\":\"1\",\"to_id\":\"2\"}},{\"type\":\"action\",\"dimensions\":{\"width\":140,\"height\":33},\"handleBounds\":{\"source\":[{\"id\":\"top\",\"position\":\"top\",\"x\":66.8125,\"y\":-2,\"width\":6,\"height\":6},{\"id\":\"right\",\"position\":\"right\",\"x\":135.64056396484375,\"y\":13.5,\"width\":6,\"height\":6},{\"id\":\"bottom\",\"position\":\"bottom\",\"x\":66.8125,\"y\":29,\"width\":6,\"height\":6},{\"id\":\"left\",\"position\":\"left\",\"x\":-2,\"y\":13.5,\"width\":6,\"height\":6}]},\"computedPosition\":{\"x\":422.326976976977,\"y\":632.385085085085,\"z\":0},\"id\":\"action-2\",\"position\":{\"x\":422.326976976977,\"y\":632.385085085085},\"data\":{\"from_id\":\"2\",\"to_id\":\"3\"}},{\"type\":\"action\",\"dimensions\":{\"width\":143,\"height\":33},\"handleBounds\":{\"source\":[{\"id\":\"top\",\"position\":\"top\",\"x\":68.640625,\"y\":-2,\"width\":6,\"height\":6},{\"id\":\"right\",\"position\":\"right\",\"x\":139.28125,\"y\":13.5,\"width\":6,\"height\":6},{\"id\":\"bottom\",\"position\":\"bottom\",\"x\":68.640625,\"y\":29,\"width\":6,\"height\":6},{\"id\":\"left\",\"position\":\"left\",\"x\":-2,\"y\":13.5,\"width\":6,\"height\":6}]},\"computedPosition\":{\"x\":701,\"y\":851,\"z\":0},\"id\":\"action-3\",\"position\":{\"x\":701,\"y\":851},\"data\":{\"from_id\":\"3\",\"to_id\":\"2\"}},{\"type\":\"action\",\"dimensions\":{\"width\":78,\"height\":33},\"handleBounds\":{\"source\":[{\"id\":\"top\",\"position\":\"top\",\"x\":36.125,\"y\":-2,\"width\":6,\"height\":6},{\"id\":\"right\",\"position\":\"right\",\"x\":74.265625,\"y\":13.5,\"width\":6,\"height\":6},{\"id\":\"bottom\",\"position\":\"bottom\",\"x\":36.125,\"y\":29,\"width\":6,\"height\":6},{\"id\":\"left\",\"position\":\"left\",\"x\":-2,\"y\":13.5,\"width\":6,\"height\":6}]},\"computedPosition\":{\"x\":949.75,\"y\":371.5,\"z\":0},\"id\":\"action-5\",\"position\":{\"x\":949.75,\"y\":371.5},\"data\":{\"from_id\":\"2\",\"to_id\":\"5\"}},{\"type\":\"action\",\"dimensions\":{\"width\":145,\"height\":33},\"handleBounds\":{\"source\":[{\"id\":\"top\",\"position\":\"top\",\"x\":69.484375,\"y\":-2,\"width\":6,\"height\":6},{\"id\":\"right\",\"position\":\"right\",\"x\":140.984375,\"y\":13.5,\"width\":6,\"height\":6},{\"id\":\"bottom\",\"position\":\"bottom\",\"x\":69.484375,\"y\":29,\"width\":6,\"height\":6},{\"id\":\"left\",\"position\":\"left\",\"x\":-2,\"y\":13.5,\"width\":6,\"height\":6}]},\"computedPosition\":{\"x\":1035.3995085711967,\"y\":620.2700991894732,\"z\":0},\"id\":\"action-8\",\"position\":{\"x\":1035.3995085711967,\"y\":620.2700991894732},\"data\":{\"from_id\":\"2\",\"to_id\":\"7\"}},{\"type\":\"action\",\"dimensions\":{\"width\":78,\"height\":33},\"handleBounds\":{\"source\":[{\"id\":\"top\",\"position\":\"top\",\"x\":36.125,\"y\":-2,\"width\":6,\"height\":6},{\"id\":\"right\",\"position\":\"right\",\"x\":74.265625,\"y\":13.5,\"width\":6,\"height\":6},{\"id\":\"bottom\",\"position\":\"bottom\",\"x\":36.125,\"y\":29,\"width\":6,\"height\":6},{\"id\":\"left\",\"position\":\"left\",\"x\":-2,\"y\":13.5,\"width\":6,\"height\":6}]},\"computedPosition\":{\"x\":1244.2796212850856,\"y\":541.5944995497074,\"z\":0},\"id\":\"action-9\",\"position\":{\"x\":1244.2796212850856,\"y\":541.5944995497074},\"data\":{\"from_id\":\"7\",\"to_id\":\"5\"}},{\"type\":\"action\",\"dimensions\":{\"width\":64,\"height\":33},\"handleBounds\":{\"source\":[{\"id\":\"top\",\"position\":\"top\",\"x\":28.953125,\"y\":-2,\"width\":6,\"height\":6},{\"id\":\"right\",\"position\":\"right\",\"x\":59.90625,\"y\":13.5,\"width\":6,\"height\":6},{\"id\":\"bottom\",\"position\":\"bottom\",\"x\":28.953125,\"y\":29,\"width\":6,\"height\":6},{\"id\":\"left\",\"position\":\"left\",\"x\":-2,\"y\":13.5,\"width\":6,\"height\":6}]},\"computedPosition\":{\"x\":939.3074574574575,\"y\":885.5,\"z\":0},\"id\":\"action-7\",\"position\":{\"x\":939.3074574574575,\"y\":885.5},\"data\":{\"from_id\":\"2\",\"to_id\":\"6\"}},{\"type\":\"action\",\"dimensions\":{\"width\":64,\"height\":33},\"handleBounds\":{\"source\":[{\"id\":\"top\",\"position\":\"top\",\"x\":28.953125,\"y\":-2,\"width\":6,\"height\":6},{\"id\":\"right\",\"position\":\"right\",\"x\":59.90625,\"y\":13.5,\"width\":6,\"height\":6},{\"id\":\"bottom\",\"position\":\"bottom\",\"x\":28.953125,\"y\":29.00006103515625,\"width\":6,\"height\":6},{\"id\":\"left\",\"position\":\"left\",\"x\":-2,\"y\":13.5,\"width\":6,\"height\":6}]},\"computedPosition\":{\"x\":1126.809945902337,\"y\":958.8497926152006,\"z\":0},\"id\":\"action-10\",\"position\":{\"x\":1126.809945902337,\"y\":958.8497926152006},\"data\":{\"from_id\":\"7\",\"to_id\":\"6\"}},{\"sourceHandle\":\"bottom\",\"targetHandle\":\"left\",\"type\":\"transition\",\"source\":\"1\",\"target\":\"action-1\",\"updatable\":true,\"animated\":true,\"id\":\"vueflow__edge-1bottom-action-1left\",\"sourceX\":798.2279091591593,\"sourceY\":301.40830830830834,\"targetX\":712,\"targetY\":447},{\"sourceHandle\":\"right\",\"targetHandle\":\"top\",\"type\":\"transition\",\"source\":\"action-1\",\"target\":\"2\",\"updatable\":true,\"animated\":true,\"id\":\"vueflow__edge-action-1right-2top\",\"sourceX\":822.34375,\"sourceY\":447,\"targetX\":766.421875,\"targetY\":550.5,\"markerEnd\":{\"type\":\"arrow\",\"width\":15,\"height\":15,\"strokeWidth\":1.5,\"color\":\"#687178\"}},{\"sourceHandle\":\"left\",\"targetHandle\":\"left\",\"type\":\"transition\",\"source\":\"2\",\"target\":\"action-2\",\"updatable\":true,\"animated\":true,\"id\":\"vueflow__edge-2left-action-2left\",\"sourceX\":697.5,\"sourceY\":588,\"targetX\":420.326976976977,\"targetY\":648.885085085085},{\"sourceHandle\":\"right\",\"targetHandle\":\"top\",\"type\":\"transition\",\"source\":\"action-2\",\"target\":\"3\",\"updatable\":true,\"animated\":true,\"id\":\"vueflow__edge-action-2right-3top\",\"sourceX\":563.9675409418207,\"sourceY\":648.885085085085,\"targetX\":454.0403403403403,\"targetY\":742.9022022022023,\"markerEnd\":{\"type\":\"arrow\",\"width\":15,\"height\":15,\"strokeWidth\":1.5,\"color\":\"#687178\"}},{\"sourceHandle\":\"right\",\"targetHandle\":\"left\",\"type\":\"transition\",\"source\":\"3\",\"target\":\"action-3\",\"updatable\":true,\"animated\":true,\"id\":\"vueflow__edge-3right-action-3left\",\"sourceX\":546.0402793051841,\"sourceY\":790.9022022022023,\"targetX\":699,\"targetY\":867.5},{\"sourceHandle\":\"right\",\"targetHandle\":\"bottom\",\"type\":\"transition\",\"source\":\"action-3\",\"target\":\"2\",\"updatable\":true,\"animated\":true,\"id\":\"vueflow__edge-action-3right-2bottom\",\"sourceX\":846.28125,\"sourceY\":867.5,\"targetX\":766.421875,\"targetY\":625.5,\"markerEnd\":{\"type\":\"arrow\",\"width\":15,\"height\":15,\"strokeWidth\":1.5,\"color\":\"#687178\"}},{\"sourceHandle\":\"right\",\"targetHandle\":\"left\",\"type\":\"transition\",\"source\":\"2\",\"target\":\"action-5\",\"updatable\":true,\"animated\":true,\"id\":\"vueflow__edge-2right-action-5left\",\"sourceX\":835.34375,\"sourceY\":588,\"targetX\":947.75,\"targetY\":388},{\"sourceHandle\":\"right\",\"targetHandle\":\"top\",\"type\":\"transition\",\"source\":\"action-5\",\"target\":\"5\",\"updatable\":true,\"animated\":true,\"id\":\"vueflow__edge-action-5right-5top\",\"sourceX\":1030.015625,\"sourceY\":388,\"targetX\":1209.9375,\"targetY\":389.5,\"markerEnd\":{\"type\":\"arrow\",\"width\":15,\"height\":15,\"strokeWidth\":1.5,\"color\":\"#687178\"}},{\"sourceHandle\":\"right\",\"targetHandle\":\"left\",\"type\":\"transition\",\"source\":\"2\",\"target\":\"action-8\",\"updatable\":true,\"animated\":true,\"id\":\"vueflow__edge-2right-action-8left\",\"sourceX\":835.34375,\"sourceY\":588,\"targetX\":1033.3995085711967,\"targetY\":636.7700991894732},{\"sourceHandle\":\"right\",\"targetHandle\":\"left\",\"type\":\"transition\",\"source\":\"action-8\",\"target\":\"7\",\"updatable\":true,\"animated\":true,\"id\":\"vueflow__edge-action-8right-7left\",\"sourceX\":1182.3838835711967,\"sourceY\":636.7700991894732,\"targetX\":1224.951343560815,\"targetY\":713.8878719605246,\"markerEnd\":{\"type\":\"arrow\",\"width\":15,\"height\":15,\"strokeWidth\":1.5,\"color\":\"#687178\"}},{\"sourceHandle\":\"top\",\"targetHandle\":\"left\",\"type\":\"transition\",\"source\":\"7\",\"target\":\"action-9\",\"updatable\":true,\"animated\":true,\"id\":\"vueflow__edge-7top-action-9left\",\"sourceX\":1300.076343560815,\"sourceY\":676.3878719605246,\"targetX\":1242.2796212850856,\"targetY\":558.0944995497074},{\"sourceHandle\":\"right\",\"targetHandle\":\"bottom\",\"type\":\"transition\",\"source\":\"action-9\",\"target\":\"5\",\"updatable\":true,\"animated\":true,\"id\":\"vueflow__edge-action-9right-5bottom\",\"sourceX\":1324.5452462850856,\"sourceY\":558.0944995497074,\"targetX\":1209.9375,\"targetY\":464.5,\"markerEnd\":{\"type\":\"arrow\",\"width\":15,\"height\":15,\"strokeWidth\":1.5,\"color\":\"#687178\"}},{\"sourceHandle\":\"right\",\"targetHandle\":\"left\",\"type\":\"transition\",\"source\":\"2\",\"target\":\"action-7\",\"updatable\":true,\"animated\":true,\"id\":\"vueflow__edge-2right-action-7left\",\"sourceX\":835.34375,\"sourceY\":588,\"targetX\":937.3074574574575,\"targetY\":902},{\"sourceHandle\":\"right\",\"targetHandle\":\"top\",\"type\":\"transition\",\"source\":\"action-7\",\"target\":\"6\",\"updatable\":true,\"animated\":true,\"id\":\"vueflow__edge-action-7right-6top\",\"sourceX\":1005.2137074574575,\"sourceY\":902,\"targetX\":928.78125,\"targetY\":1067.4425425425425,\"markerEnd\":{\"type\":\"arrow\",\"width\":15,\"height\":15,\"strokeWidth\":1.5,\"color\":\"#687178\"}},{\"sourceHandle\":\"bottom\",\"targetHandle\":\"left\",\"type\":\"transition\",\"source\":\"7\",\"target\":\"action-10\",\"updatable\":true,\"animated\":true,\"id\":\"vueflow__edge-7bottom-action-10left\",\"sourceX\":1300.076343560815,\"sourceY\":751.3878719605246,\"targetX\":1124.809945902337,\"targetY\":975.3497926152006},{\"sourceHandle\":\"right\",\"targetHandle\":\"right\",\"type\":\"transition\",\"source\":\"action-10\",\"target\":\"6\",\"updatable\":true,\"animated\":true,\"id\":\"vueflow__edge-action-10right-6right\",\"sourceX\":1192.716195902337,\"sourceY\":975.3497926152006,\"targetX\":995.0625,\"targetY\":1104.9425425425425,\"markerEnd\":{\"type\":\"arrow\",\"width\":15,\"height\":15,\"strokeWidth\":1.5,\"color\":\"#687178\"}}]",
+  "workflow_name": "Compassionate Use Request WF",
+  "workflow_state_field": "workflow_state"
+ }
+]

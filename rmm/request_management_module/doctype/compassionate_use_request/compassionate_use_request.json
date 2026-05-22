@@ -1,0 +1,478 @@
+{
+ "actions": [],
+ "allow_events_in_timeline": 1,
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2026-05-21 01:46:17.937556",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "received_on",
+  "requester_antragsteller_section",
+  "requester_name",
+  "medical_license_number",
+  "speciality",
+  "specify_other",
+  "column_break_fsqb",
+  "institution_name",
+  "institution_type",
+  "requester_email",
+  "patient_the_third_party_section",
+  "patient_code",
+  "patient_initials",
+  "patient_year_of_birth",
+  "sex",
+  "column_break_ekea",
+  "section_break_ygef",
+  "indication_code",
+  "indication_description",
+  "clinical_request_section",
+  "requested_product",
+  "requested_dose",
+  "treatment_duration",
+  "column_break_vtkz",
+  "section_break_pcuk",
+  "prior_treatments",
+  "column_break_latf",
+  "clinical_justification",
+  "clinical_criteria_drives_verification_section",
+  "is_off_label",
+  "is_pediatric",
+  "is_pregnancy",
+  "requires_verification",
+  "column_break_lmzx",
+  "decision_filled_during_workflow_section",
+  "decision_date",
+  "column_break_mowd",
+  "bfarm_program_number",
+  "section_break_hhqn",
+  "decision_rationale"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "CUR-.YYYY.-.####",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "received_on",
+   "fieldtype": "Date",
+   "label": "Received On",
+   "permlevel": 4,
+   "read_only": 1
+  },
+  {
+   "fieldname": "requester_antragsteller_section",
+   "fieldtype": "Section Break",
+   "label": " Requester Details"
+  },
+  {
+   "fieldname": "requester_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Requester Name",
+   "permlevel": 3,
+   "reqd": 1
+  },
+  {
+   "fieldname": "medical_license_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Medical License Number",
+   "permlevel": 3,
+   "reqd": 1
+  },
+  {
+   "fieldname": "speciality",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Speciality",
+   "options": "\nOncology\nDermatology\nHematology\nNeurology\nPediatrics\nOther",
+   "permlevel": 3,
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.speciality === \"Other\"",
+   "fieldname": "specify_other",
+   "fieldtype": "Data",
+   "label": "Specify Other",
+   "mandatory_depends_on": "eval:doc.speciality === \"Other\"",
+   "permlevel": 3
+  },
+  {
+   "fieldname": "column_break_fsqb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "institution_name",
+   "fieldtype": "Data",
+   "label": "Institution Name",
+   "permlevel": 3,
+   "reqd": 1
+  },
+  {
+   "fieldname": "institution_type",
+   "fieldtype": "Select",
+   "label": "Institution Type",
+   "options": "\nUniversity Hospital\nClinic",
+   "permlevel": 3,
+   "reqd": 1
+  },
+  {
+   "fieldname": "requester_email",
+   "fieldtype": "Data",
+   "label": "Requester Email",
+   "permlevel": 3,
+   "reqd": 1
+  },
+  {
+   "fieldname": "patient_the_third_party_section",
+   "fieldtype": "Section Break",
+   "label": "Patient Details"
+  },
+  {
+   "fieldname": "patient_code",
+   "fieldtype": "Data",
+   "label": "Patient Code",
+   "permlevel": 3,
+   "reqd": 1
+  },
+  {
+   "fieldname": "patient_initials",
+   "fieldtype": "Data",
+   "label": "Patient Initials",
+   "permlevel": 3
+  },
+  {
+   "fieldname": "column_break_ekea",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "patient_year_of_birth",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Patient Year of Birth",
+   "permlevel": 3,
+   "reqd": 1
+  },
+  {
+   "fieldname": "sex",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Sex",
+   "options": "\nMale\nFemale",
+   "permlevel": 3,
+   "reqd": 1
+  },
+  {
+   "fieldname": "indication_code",
+   "fieldtype": "Data",
+   "label": "Indication Code",
+   "permlevel": 3,
+   "reqd": 1
+  },
+  {
+   "fieldname": "indication_description",
+   "fieldtype": "Text Editor",
+   "label": "Indication Description",
+   "permlevel": 3,
+   "reqd": 1
+  },
+  {
+   "fieldname": "clinical_request_section",
+   "fieldtype": "Section Break",
+   "label": "Clinical Request"
+  },
+  {
+   "fieldname": "requested_product",
+   "fieldtype": "Data",
+   "label": "Requested Product",
+   "permlevel": 3,
+   "reqd": 1
+  },
+  {
+   "fieldname": "requested_dose",
+   "fieldtype": "Data",
+   "label": "Requested Dose",
+   "permlevel": 3,
+   "reqd": 1
+  },
+  {
+   "fieldname": "treatment_duration",
+   "fieldtype": "Data",
+   "label": "Treatment Duration",
+   "permlevel": 3,
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_vtkz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "clinical_justification",
+   "fieldtype": "Text Editor",
+   "label": "Clinical Justification",
+   "permlevel": 3,
+   "reqd": 1
+  },
+  {
+   "fieldname": "prior_treatments",
+   "fieldtype": "Text Editor",
+   "label": "Prior Treatments",
+   "permlevel": 3,
+   "reqd": 1
+  },
+  {
+   "fieldname": "clinical_criteria_drives_verification_section",
+   "fieldtype": "Section Break",
+   "label": "Clinical Criteria"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_off_label",
+   "fieldtype": "Check",
+   "label": "Is Off Label",
+   "permlevel": 3
+  },
+  {
+   "default": "0",
+   "fieldname": "is_pediatric",
+   "fieldtype": "Check",
+   "label": "Is Pediatric",
+   "permlevel": 3
+  },
+  {
+   "default": "0",
+   "fieldname": "is_pregnancy",
+   "fieldtype": "Check",
+   "label": "Is Pregnancy",
+   "permlevel": 3
+  },
+  {
+   "default": "0",
+   "fieldname": "requires_verification",
+   "fieldtype": "Check",
+   "label": "Requires Verification",
+   "permlevel": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_lmzx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "decision_filled_during_workflow_section",
+   "fieldtype": "Section Break",
+   "label": "Decision"
+  },
+  {
+   "fieldname": "decision_rationale",
+   "fieldtype": "Text Editor",
+   "label": "Decision Rationale",
+   "permlevel": 4
+  },
+  {
+   "fieldname": "decision_date",
+   "fieldtype": "Datetime",
+   "label": "Decision Date",
+   "permlevel": 4
+  },
+  {
+   "fieldname": "bfarm_program_number",
+   "fieldtype": "Data",
+   "label": "Bfarm Program Number",
+   "permlevel": 4
+  },
+  {
+   "fieldname": "column_break_mowd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_ygef",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_pcuk",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_latf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_hhqn",
+   "fieldtype": "Section Break"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-05-22 23:35:49.483426",
+ "modified_by": "Administrator",
+ "module": "Request Management Module",
+ "name": "Compassionate Use Request",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "RMM Agent",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "RMM Agent",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "permlevel": 4,
+   "read": 1,
+   "role": "RMM Agent",
+   "write": 1
+  },
+  {
+   "permlevel": 3,
+   "read": 1,
+   "role": "RMM Agent"
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "RMM Team Lead",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "RMM Team Lead",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "permlevel": 4,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "RMM Team Lead",
+   "share": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "permlevel": 3,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "RMM Team Lead",
+   "share": 1
+  },
+  {
+   "create": 1,
+   "if_owner": 1,
+   "print": 1,
+   "read": 1,
+   "role": "RMM Requestor",
+   "write": 1
+  },
+  {
+   "if_owner": 1,
+   "permlevel": 3,
+   "read": 1,
+   "role": "RMM Requestor",
+   "write": 1
+  },
+  {
+   "permlevel": 4,
+   "read": 1,
+   "role": "RMM Requestor"
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "RMM Medical Reviewer",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "RMM Medical Reviewer",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "permlevel": 3,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "RMM Medical Reviewer",
+   "share": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "permlevel": 4,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "RMM Medical Reviewer",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "show_name_in_global_search": 1,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1,
+ "track_seen": 1,
+ "track_views": 1
+}

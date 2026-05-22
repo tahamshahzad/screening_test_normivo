@@ -134,15 +134,29 @@ app_license = "mit"
 # 	"Event": "frappe.desk.doctype.event.event.has_permission",
 # }
 
+fixtures = [
+    {"dt": "Role", "filters": [["name", "like", "RMM%"]]},
+    {"dt": "Workflow", "filters": [["name", "=", "Compassionate Use Request WF"]]},
+    {"dt": "Workflow State", "filters": [["workflow_state_name", "in", ["New", "In Review", "Verification", "Approved", "Rejected"]]]},
+    {"dt": "Workflow Action Master", "filters": [["workflow_action_name", "in", ["Start Review", "Approve", "Reject", "Needs Verification", "Needs Correction", "Resubmit Request"]]]},
+    {"dt": "User", "filters": [["first_name", "like", "RMM%"]]},
+]
+
+permission_query_conditions = {
+    "Compassionate Use Request": "rmm.request_management_module.doctype.compassionate_use_request.compassionate_use_request.compassionate_use_request_query",
+}
+
+has_permission = {
+    "Compassionate Use Request": "rmm.request_management_module.doctype.compassionate_use_request.compassionate_use_request.compassionate_use_request_has_permission",
+}
+
 # Document Events
 # ---------------
 # Hook on document methods and events
 
 # doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
+# 	"Compassionate Use Request": {
+# 		"on_update": "rmm.request_management_module.doctype.compassionate_use_request.compassionate_use_request.ristrict_assignment_to_team_leads",
 # 	}
 # }
 

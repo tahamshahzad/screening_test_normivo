@@ -53,3 +53,12 @@ jspm_packages/
 
 # Aider AI Chat
 .aider*
+
+# Type checking
+.mypy_cache/
+.dmypy.json
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/

@@ -1,0 +1,54 @@
+[
+ {
+  "desk_access": 1,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Role",
+  "home_page": null,
+  "is_custom": 1,
+  "modified": "2026-05-22 02:10:05.831343",
+  "name": "RMM Agent",
+  "restrict_to_domain": null,
+  "role_name": "RMM Agent",
+  "two_factor_auth": 0
+ },
+ {
+  "desk_access": 1,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Role",
+  "home_page": null,
+  "is_custom": 1,
+  "modified": "2026-05-22 02:11:39.572360",
+  "name": "RMM Team Lead",
+  "restrict_to_domain": null,
+  "role_name": "RMM Team Lead",
+  "two_factor_auth": 0
+ },
+ {
+  "desk_access": 1,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Role",
+  "home_page": null,
+  "is_custom": 1,
+  "modified": "2026-05-22 02:11:42.305658",
+  "name": "RMM Medical Reviewer",
+  "restrict_to_domain": null,
+  "role_name": "RMM Medical Reviewer",
+  "two_factor_auth": 0
+ },
+ {
+  "desk_access": 1,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Role",
+  "home_page": null,
+  "is_custom": 1,
+  "modified": "2026-05-22 03:43:54.605980",
+  "name": "RMM Requestor",
+  "restrict_to_domain": null,
+  "role_name": "RMM Requestor",
+  "two_factor_auth": 0
+ }
+]
