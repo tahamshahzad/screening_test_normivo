@@ -16,16 +16,18 @@ A Frappe v16 app implementing a **Compassionate Use Request** workflow — enabl
 ## Installation
 
 ```bash
-bench get-app https://github.com/<your-org>/rmm
+bench get-app https://github.com/tahamshahzad/screening_test_normivo
 bench --site <site> install-app rmm
 bench --site <site> migrate
 ```
 
-`bench migrate` imports the bundled fixtures (roles, workflow, and seed users) automatically. No additional seed command is needed.
+`bench migrate` imports the bundled fixtures (roles, workflow, workflow states, workflow actions, and seed users) automatically. No additional seed command is needed.
+
+> **Note on seed user passwords:** Frappe does not export password hashes in fixtures. Seed user accounts will be created on install but will need passwords set via the "Forgot Password" flow or `bench --site <site> set-user-password <email>`.
 
 ---
 
-## Story 1 — Field Set
+## Story 1 — Creating a Request
 
 ### Fields chosen
 
@@ -55,52 +57,56 @@ bench --site <site> migrate
 | **Decision** | `decision_date` | Datetime | Stamped when a decision is reached |
 | | `decision_rationale` | Text Editor | Reviewers document the basis for approval or rejection |
 | | `bfarm_program_number` | Data | Reference to the relevant regulatory programme (BfArM) |
-| **System** | `received_on` | Date (read-only) | Auto-stamped on creation; audit anchor |
+| **System** | `received_on` | Date (read-only) | Auto-stamped on creation via `before_save`; audit anchor for when the request came in |
 | | `naming_series` | Select | Auto-generates `CUR-YYYY-####` document IDs |
 
 ### Why these fields
 
-The field set is designed to mirror the real-world flow of a compassionate use request — three parties are involved, and the form captures what each party contributes:
+The field set models three distinct parties in the compassionate use process:
 
-1. **Patient (third party)** — the patient is never a system user, so they are identified by an anonymised code and initials rather than a name. Year of birth and sex give reviewers enough clinical context without storing unnecessary personal data.
-2. **Requestor (external physician)** — name, licence number, specialty, and institution tell the review team who is asking and whether they are qualified. The requestor submits the form but is not an internal employee.
-3. **Review team (internal)** — the clinical criteria flags (off-label, paediatric, pregnancy) are checkboxes the doctor fills in that flag the request for closer review. The decision section (rationale, date, BfArM programme number) is filled in by the review team after their decision is made.
+1. **Patient (third party)** — identified by anonymised code and initials rather than a name, with year of birth and sex giving reviewers enough clinical context without storing unnecessary personal data.
+2. **Requestor (external physician)** — name, licence number, specialty, and institution tell the review team who is asking and whether they are qualified. The requestor is not a system user; the form is their point of entry.
+3. **Review team (internal)** — the clinical criteria flags (off-label, paediatric, pregnancy) are checkboxes the doctor fills in that signal cases needing closer review. The decision section is written by the review team after their decision is made.
 
-`prior_treatments` is a required field because "no approved alternative exists" is the primary qualifying criterion for compassionate use. `indication_code + indication_description` lets reviewers reference a standardised code while still reading a plain-language explanation.
+`prior_treatments` is required because "no approved alternative exists" is the primary qualifying criterion for compassionate use. `indication_code + indication_description` lets reviewers cross-reference a standardised code while still reading a plain-language explanation.
 
-**A note on field completeness:** This field set is a best-effort approximation of what a real compassionate use request form might contain. I am not a domain expert in pharmaceutical regulation. Given a proper clinical or regulatory brief, the field set would be revised to match the exact requirements of the applicable programme (e.g. BfArM §21 AMG in Germany).
+**Who is internally responsible:** Responsibility is tracked via Frappe's native assignment mechanism (`_assign` field). The Team Lead assigns a request to an agent using the built-in Assign button. The assigned agent's email is stored on the record and is used by both the permission filter and the workflow to identify who is responsible.
 
-### Who can read and edit which fields
+**A note on field completeness:** This field set is a best-effort approximation based on the domain description. I am not a domain expert in pharmaceutical regulation. Given a proper clinical or regulatory brief, the fields would be revised to match the exact requirements of the applicable programme (e.g. BfArM §21 AMG in Germany).
 
-Field-level access is controlled using Frappe's `permlevel` system, which assigns a numeric level to each field and a matching level to each role's permission row. A role can only read or write fields at or below its permitted level.
+### Field-level access (permlevels)
+
+Frappe's `permlevel` system assigns a numeric level to each field and a matching level to each role's permission row. A role can only read or write fields at or below its permitted level.
 
 | Permlevel | Fields | Who can write |
 |---|---|---|
-| **3** | All doctor-facing fields (requester details, patient details, clinical request, clinical criteria) | RMM Requestor (the doctor) |
-| **4** | Decision fields (decision date, rationale, BfArM programme number) | RMM Agent, RMM Medical Reviewer |
+| **3** | All doctor-facing fields (requester, patient, clinical request, clinical criteria) | RMM Requestor |
+| **4** | Decision fields (decision date, rationale, BfArM number) | RMM Agent, RMM Medical Reviewer |
 | **1** | Naming series, `requires_verification` (read-only) | System / auto-set |
 
-The doctor can read the decision fields once they are filled in, but cannot edit them. The review team can read everything the doctor entered but cannot modify it after submission. This separation is enforced at the model level by Frappe — no custom code is needed.
+The doctor can read the decision fields once filled in, but cannot edit them. The review team can read everything the doctor entered but cannot modify it after submission. This is enforced at the model level by Frappe — no custom code is needed.
 
-### Roles
+### Roles and visibility
 
 | Role | Create | Read | Write |
 |---|---|---|---|
 | **RMM Requestor** | Yes — own requests only | Own requests only | Doctor-facing fields (permlevel 3) |
-| **RMM Team Lead** | No | All requests | All requests; assigns reviewers |
+| **RMM Team Lead** | No | All requests | All requests; assigns agents |
 | **RMM Agent** | No | Requests assigned to them | All fields including decision (permlevel 4) |
 | **RMM Medical Reviewer** | No | Requests in Verification, Approved, Rejected (plus any assigned to them) | Decision fields (permlevel 4) |
 
 **How visibility is enforced:**
 
 - **RMM Requestor** — Frappe's built-in `if_owner` flag on the DocType permission row restricts them to records they created. No custom code needed.
-- **RMM Team Lead** — the list-filter hook returns no SQL condition for this role, so they see all records.
-- **RMM Agent** — the list-filter hook restricts them to records where their email appears in the assignment list (`_assign`). They only see what has been assigned to them.
-- **RMM Medical Reviewer** — the list-filter hook adds a `workflow_state IN ('Verification', 'Approved', 'Rejected')` condition so they only see records that have reached those states. If a record is explicitly assigned to them, they can also see it regardless of state. A document-level hook enforces the same rules when a record is opened directly.
+- **RMM Team Lead** — the `permission_query_conditions` hook returns no SQL condition for this role, so they see all records.
+- **RMM Agent** — the hook restricts them to records where their email appears in the `_assign` field. They only see what has been assigned to them.
+- **RMM Medical Reviewer** — the hook adds `workflow_state IN ('Verification', 'Approved', 'Rejected')` so they only see records that have reached those states. If a record is explicitly assigned to them, they can also see it regardless of state.
+
+Both a list-view SQL filter hook (`permission_query_conditions`) and a document-level access hook (`has_permission`) are registered in `hooks.py` to enforce these rules consistently whether a user is browsing the list or opening a record directly.
 
 ---
 
-## Story 2 — Workflow
+## Story 2 — Processing a Request Through Internal Review
 
 ### States and transitions
 
@@ -119,23 +125,36 @@ The doctor can read the decision fields once they are filled in, but cannot edit
 
 ### How the workflow works
 
-Once a doctor submits a request it starts in **New**. An agent picks it up and moves it to **In Review**. From there the agent has four options:
+A request starts in **New** when the doctor submits it. The Team Lead assigns it to an agent, who moves it to **In Review**. From there the agent has four options:
 
-- **Approve or Reject** directly — allowed when the request does not require medical verification.
-- **Needs Verification** — escalates the request to a Medical Reviewer. The Medical Reviewer can then approve or reject it from the **Verification** state.
-- **Needs Correction** — sends the request back to the doctor. It enters **Awaiting Requestor** and the doctor can update and resubmit it, which returns it to **In Review**.
+- **Approve or Reject** directly — used when the request does not require medical verification.
+- **Needs Verification** — escalates to a Medical Reviewer. Only the Medical Reviewer can then Approve or Reject from the **Verification** state.
+- **Needs Correction** — sends the request back to the doctor. It enters **Awaiting Requestor**. The doctor can update it and resubmit, which returns it to **In Review** only — it cannot skip ahead to any other state.
 
-Each transition is restricted to the correct role inside the Frappe Workflow definition. Frappe only shows the buttons a user is allowed to click — no custom code is needed to hide or block the wrong transitions for the wrong role.
+### Decision: Workflow Action transitions, not custom code
 
-### The Verification step and how it is enforced
+All transitions — including the send-back loop — are implemented as Workflow Action transitions inside Frappe's Workflow engine, with each action restricted to the correct role. This means:
 
-The **Verification** state is always present in the workflow. When a doctor checks `is_pregnancy` on a request, the system automatically sets `requires_verification = 1`. This marks the request as one that must go through the Verification state before a final decision is made.
+- Only the assigned agent can take the "Needs Correction" action (RMM Agent role required).
+- "Awaiting Requestor" can only transition to "In Review" via "Resubmit Request" (RMM Requestor role required) — there is no transition from that state to anywhere else, so skipping ahead is impossible by construction.
+- No `frappe.db.set_value` or manual state manipulation is used anywhere. Frappe's workflow engine enforces every transition rule, and every state change is automatically logged with the user and timestamp via Frappe's built-in workflow action log.
 
-There are two layers of enforcement so this rule cannot be bypassed:
+### Decision: Verification approach
 
-1. **UI layer** — because each workflow transition is tied to a specific role, an agent reviewing a pregnancy request will only see "Needs Verification" as their escalation option; the "Approve" and "Reject" buttons that skip Verification are not presented to them.
+**We chose approach (a) — a boolean flag gates whether Verification is required — implemented as a hybrid with the state always present in the workflow graph.**
 
-2. **Backend guard** — even if someone bypasses the UI and calls the API directly, a check in the document's `validate()` method catches it. If the request is being moved to Approved or Rejected, `requires_verification` is `1`, and the last saved state in the database was not `Verification`, Frappe raises a validation error and rejects the save. This makes the rule impossible to bypass from any direction.
+The Verification state is always in the workflow definition. Whether a request is required to pass through it is controlled by `requires_verification`, which is auto-set from `is_pregnancy` in `before_save`. This means:
+
+- For requests that do not require verification, the agent can Approve or Reject directly from In Review. The Verification state exists but is never entered.
+- For requests that do require verification, the agent must use "Needs Verification" to escalate. The `validate()` method then blocks any attempt to Approve or Reject unless the previous committed state in the database was "Verification".
+
+We chose this over a pure approach (b) (auto-skip) because Frappe's Workflow engine does not support conditional auto-skipping of states natively. Implementing auto-skip would require a custom `before_workflow_action` hook to intercept transitions and re-route them — more custom code than using the boolean flag. The flag approach is simpler, explicit, and testable.
+
+**Two layers of enforcement so the rule cannot be bypassed:**
+
+1. **UI layer** — each transition is tied to a specific role, so an agent on a pregnancy request will not be shown the direct Approve/Reject buttons; only "Needs Verification" is available as an escalation path.
+
+2. **Backend guard** — even if someone calls the API directly and forces the state to Approved or Rejected, `validate()` rejects the save:
 
 ```python
 def validate(self) -> None:
@@ -149,7 +168,32 @@ def validate(self) -> None:
         )
 ```
 
-`requires_verification` is set automatically from `is_pregnancy` when the record is saved and is read-only, so neither the doctor nor a reviewer can override it manually.
+`get_db_value("workflow_state")` reads the last committed state from the database, so the guard only fires when Verification was skipped. Once a request has legitimately passed through Verification, the guard allows the final decision.
+
+---
+
+## Story 3 — Managing the Queue
+
+**Status: delivered via Frappe core — no custom code needed.**
+
+Frappe's built-in list view already provides what Story 3 requires. Agents can:
+
+- See all requests assigned to them (enforced by the `permission_query_conditions` hook — unassigned requests are invisible to agents automatically).
+- Filter by `workflow_state`, `received_on`, `requested_product`, or any other field using the standard list view filter bar.
+- Sort by date received or status to prioritise work.
+- Save named filters as private views for personal use.
+
+No custom queue view was built because the native list view with the permission filter already delivers the outcome: each agent sees only their own open requests and can sort and filter them as needed. Building a custom page would duplicate this for no additional user value within the scope of this task.
+
+---
+
+## Story 4 — Workload Overview
+
+**Status: skipped — deliverable via a Frappe Script Report with no custom DocType code required.**
+
+A Team Lead workload view (requests per agent, broken down by status) can be built as a Frappe **Script Report** on the `Compassionate Use Request` DocType. The report queries `_assign`, `workflow_state`, and `modified` and groups results by assignee and state. This is entirely configuration within the Frappe report builder — no Python controller changes are needed.
+
+This was skipped because the task prioritised Stories 1 and 2, and building the report would not have demonstrated anything beyond Story 3's approach (it is the same Frappe pattern). In a real sprint this would be the next task.
 
 ---
 
@@ -157,9 +201,10 @@ def validate(self) -> None:
 
 | Story | Status | Notes |
 |---|---|---|
-| Story 1 — Field set, DocType, and roles | Complete | All fields, permlevels, naming series, and role-based access configured |
-| Story 2 — Workflow | Complete | Six states, eight transitions, role-restricted; Verification enforced at UI and backend |
-| Story 3 — Verification stage | Complete via Frappe core | Built into the workflow; `validate()` guard closes the backend bypass |
+| Story 1 — Creating a request | Complete | DocType with full field set, `received_on` auto-stamp, assignment via native Frappe `_assign`, role-based access with permlevels |
+| Story 2 — Processing through review | Complete | Six states, eight role-restricted transitions via Workflow engine; send-back loop enforced by transition rules; Verification gated by boolean flag + `validate()` guard |
+| Story 3 — Managing the queue | Complete via Frappe core | Native list view + `permission_query_conditions` hook delivers per-agent filtered queue with sorting and filtering out of the box |
+| Story 4 — Workload overview | Skipped | Achievable as a Frappe Script Report (no DocType changes needed); deprioritised in favour of completing Stories 1–2 fully |
 
 ---
 
@@ -201,20 +246,21 @@ bench --site <site> run-tests --doctype "Compassionate Use Request"
 
 Tests are in `rmm/request_management_module/doctype/compassionate_use_request/test_compassionate_use_request.py` and cover:
 
-- **Group 1 — Before Save**: `received_on` auto-stamp, `requires_verification` derivation, initial workflow state.
-- **Group 2 — List Filter**: Each role's `permission_query_conditions` output, including the Team Lead fix.
+- **Group 1 — Before Save**: `received_on` auto-stamp, `requires_verification` derivation from `is_pregnancy`, initial workflow state.
+- **Group 2 — List Filter**: Each role's `permission_query_conditions` output — confirms agents see only assigned records, medical reviewers see only allowed states, team leads see everything.
 - **Group 3 — Document Access**: `has_permission` for each role and workflow state combination.
-- **Group 4 — Verification Guard**: Workflow transitions using `apply_workflow`; confirms the guard blocks direct Approve/Reject when verification is required and allows it after passing through the Verification state.
+- **Group 4 — Workflow Guard**: Transitions applied via `apply_workflow` (not `db.set_value`); confirms the guard blocks direct Approve/Reject when verification is required and allows it after passing through Verification.
 
 ---
 
 ## Time Log
 
-| Story / Task | Approx. time |
+| Story | Approx. time |
 |---|---|
-| Story 1 — Field set, DocType, roles and permissions | 3 h |
-| Story 2 — Workflow setup | 2 h |
-| Story 3 — Verification guard | 1 h |
+| Story 1 — Field set, DocType, roles, and permissions | 3 h |
+| Story 2 — Workflow setup, verification guard | 3 h |
+| Story 3 — Queue (Frappe core; permission filter) | included in Story 1 |
+| Story 4 — Workload overview | skipped |
 | Tests, type hints, mypy/Pyright config | 2 h |
 | **Total** | **8 h** |
 
